@@ -86,7 +86,7 @@ void DisplayTask::run() {
     ledcAttachPin(PIN_LCD_BACKLIGHT, LEDC_CHANNEL_LCD_BACKLIGHT);
     ledcWrite(LEDC_CHANNEL_LCD_BACKLIGHT, UINT16_MAX);
 
-    spr_.setColorDepth(16);
+    spr_.setColorDepth(8);
 
     if (spr_.createSprite(TFT_WIDTH, TFT_HEIGHT) == nullptr) {
       Serial.println("ERROR: sprite allocation failed!");

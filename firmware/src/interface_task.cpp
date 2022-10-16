@@ -71,7 +71,7 @@ static KnobConfig configs[] = {
         2,
         0,
         60 * PI / 180,
-        1,
+        2,
         1,
         0.55, // Note the snap point is slightly past the midpoint (0.5); compare to normal detents which use a snap point *past* the next value (i.e. > 1)
         "On/off\nStrong detent",
@@ -98,7 +98,7 @@ static KnobConfig configs[] = {
         256,
         127,
         1 * PI / 180,
-        1,
+        2,
         1,
         1.1,
         "Fine values\nWith detents",
@@ -116,14 +116,14 @@ static KnobConfig configs[] = {
         32,
         0,
         8.225806452 * PI / 180,
-        0.2,
+        0.5,
         1,
         1.1,
         "Coarse values\nWeak detents",
     },
 };
 
-InterfaceTask::InterfaceTask(const uint8_t task_core, MotorTask& motor_task, DisplayTask* display_task) : Task("Interface", 4048, 1, task_core), motor_task_(motor_task), display_task_(display_task) {
+InterfaceTask::InterfaceTask(const uint8_t task_core, MotorTask& motor_task, DisplayTask* display_task, NetworkTask& network_task) : Task("Interface", 4048, 1, task_core), motor_task_(motor_task), display_task_(display_task), network_task_(network_task) {
     #if SK_DISPLAY
         assert(display_task != nullptr);
     #endif
@@ -294,10 +294,11 @@ void InterfaceTask::changeConfig(bool next) {
             current_config_ --;
         }
     }
-    
+    Serial.print("Send mqtt message");
     Serial.print("Changing config to ");
     Serial.print(current_config_);
     Serial.print(" -- ");
     Serial.println(configs[current_config_].descriptor);
     motor_task_.setConfig(configs[current_config_]);
+    network_task_.publishMessage();
 }

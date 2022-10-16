@@ -53,8 +53,8 @@ void MotorTask::run() {
     // float zero_electric_offset = -0.8; // handheld 2
     // float zero_electric_offset = 2.93; //0.15; // 17mm test
     // float zero_electric_offset = 0.66; // 15mm handheld
-    float zero_electric_offset = 7.34;
-    Direction foc_direction = Direction::CW;
+    float zero_electric_offset = 4.16;  //4.12
+    Direction foc_direction = Direction::CCW;
     motor.pole_pairs = 7;
 
     driver.voltage_power_supply = 5;
@@ -212,6 +212,10 @@ void MotorTask::run() {
         float offset_y = 0;
         float destination1 = (floor(a / _2PI) + measured_pole_pairs / 2.) * _2PI;
         float destination2 = (floor(a / _2PI)) * _2PI;
+        Serial.print("Destination1: ");
+        Serial.print(destination1);
+        Serial.print("Destination2: ");
+        Serial.println(destination1);
         for (; a < destination1; a += 0.4) {
             motor.move(a);
             delay(100);
@@ -226,10 +230,13 @@ void MotorTask::run() {
             offset_x += cosf(offset_angle);
             offset_y += sinf(offset_angle);
 
+            Serial.print("posA: ");
+            Serial.print(a);
+            Serial.print(",ra: ");
             Serial.print(degrees(real_electrical_angle));
-            Serial.print(", ");
+            Serial.print(", ma: ");
             Serial.print(degrees(measured_electrical_angle));
-            Serial.print(", ");
+            Serial.print(", oa: ");
             Serial.println(degrees(_normalizeAngle(offset_angle)));
         }
         for (; a > destination2; a -= 0.4) {
@@ -246,10 +253,13 @@ void MotorTask::run() {
             offset_x += cosf(offset_angle);
             offset_y += sinf(offset_angle);
 
+            Serial.print("posA: ");
+            Serial.print(a);
+            Serial.print("ra: ");
             Serial.print(degrees(real_electrical_angle));
-            Serial.print(", ");
+            Serial.print(", ma: ");
             Serial.print(degrees(measured_electrical_angle));
-            Serial.print(", ");
+            Serial.print(", oa: ");
             Serial.println(degrees(_normalizeAngle(offset_angle)));
         }
         motor.voltage_limit = 0;

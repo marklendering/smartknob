@@ -4,6 +4,8 @@
 #include "display_task.h"
 #include "interface_task.h"
 #include "motor_task.h"
+#include "network_task.h"
+
 
 #if SK_DISPLAY
 static DisplayTask display_task = DisplayTask(0);
@@ -13,14 +15,17 @@ static DisplayTask* display_task_p = nullptr;
 #endif
 static MotorTask motor_task = MotorTask(1);
 
+static NetworkTask network_task = NetworkTask(1);
 
-InterfaceTask interface_task = InterfaceTask(0, motor_task, display_task_p);
+
+InterfaceTask interface_task = InterfaceTask(0, motor_task, display_task_p, network_task);
 
 static QueueHandle_t knob_state_debug_queue;
 
 void setup() {
   Serial.begin(115200);
 
+  network_task.begin();
   motor_task.begin();
   interface_task.begin();
 
