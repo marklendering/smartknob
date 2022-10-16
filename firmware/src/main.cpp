@@ -42,7 +42,7 @@ void setup() {
 
   motor_task.addListener(knob_state_debug_queue);
 
-  // Free up the loop task
+  // Free up the Arduino loop task
   vTaskDelete(NULL);
 }
 
